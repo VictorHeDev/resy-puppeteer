@@ -1,0 +1,23 @@
+{
+  "name": "resy-puppeteer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "functions.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leochung97/resy-puppeteer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leochung97/resy-puppeteer/issues"
+  },
+  "homepage": "https://github.com/leochung97/resy-puppeteer#readme",
+  "dependencies": {
+    "puppeteer": "^19.7.3"
+  }
+}
