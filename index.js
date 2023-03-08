@@ -27,9 +27,13 @@ async function start() {
   const page = await browser.newPage();
   await page.goto(url);
   console.log("Loaded restaurant reservation page");
-  browser.close();
 
-  await page.waitForSelector()
+  await page.click("text/Log in");
+  await page.click("text/Use Email and Password instead");
+  await page.type("input[name=email]", login.email);
+  await page.type("input[name=password]", login.password);
+  await page.click("text/Continue");
+  // browser.close();
 }
 
 start();
