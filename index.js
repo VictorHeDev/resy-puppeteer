@@ -42,35 +42,48 @@ async function start() {
   // Find and click on the desired reservation time
   const desired_res = "text/" + settings.time + settings.type;
   await page.waitForTimeout(1000);
-  try {
-    await page.click(desired_res);
-    await page.waitForTimeout(1500);
-    for (let i = 0; i < 6; i++) {
-      await page.keyboard.press("Tab");
-    }
-    // await page.keyboard.press("Enter");
-  } catch {
-    console.log(
-      "Desired Reservation unavailable - attempting to find next available reservation"
-    );
+  await page.click(desired_res);
+  console.log("Desired reservation is available");
+  const popup = await page.waitForSelector("iframe[role=dialog]");
+  const frame = await popup.contentFrame();
+  await frame.waitForTimeout(1000);
+  await frame.click("button[data-test-id=order_summary_page-button-book]");
 
-    for (let i = 0; i < reservation_times.length; i++) {
-      const next_res = "text/" + reservation_times[i] + settings.type;
-      try {
-        await page.click(next_res);
-        console.log("Next available reservation is at " + reservation_times[i]);
-        const elementHandle = await page.waitForSelector("div")
+  // try {
+  //   await page.click(desired_res);
+  //   console.log("Desired reservation is available");
+  //   const popup = await page.waitForSelector("iframe[role=dialog]");
+  //   const frame = await popup.contentFrame();
+  //   await frame.click("text/Reserve Now");
 
-        for (let i = 0; i < 6; i++) {
-          await page.keyboard.press("Tab");
-        }
-        // await page.keyboard.press("Enter");
-        break;
-      } catch {
-        console.log("No available reservation at " + reservation_times[i]);
-      }
-    }
-  }
+  //   for (let i = 0; i < 6; i++) {
+  //     await page.keyboard.press("Tab");
+  //   }
+  //   // await page.keyboard.press("Enter");
+  // } catch {
+  //   console.log(
+  //     "Desired Reservation unavailable - attempting to find next available reservation"
+  //   );
+
+  //   for (let i = 0; i < reservation_times.length; i++) {
+  //     const next_res = "text/" + reservation_times[i] + settings.type;
+  //     try {
+  //       await page.click(next_res);
+  //       console.log("Next available reservation is at " + reservation_times[i]);
+  //       const popup = await page.waitForSelector("iframe[role=dialog]");
+  //       const frame = await popup.contentFrame();
+  //       await frame.click("text/Reserve Now");
+
+  //       for (let i = 0; i < 6; i++) {
+  //         await page.keyboard.press("Tab");
+  //       }
+  //       // await page.keyboard.press("Enter");
+  //       break;
+  //     } catch {
+  //       console.log("No available reservation at " + reservation_times[i]);
+  //     }
+  //   }
+  // }
 
   // await page.waitForSelector("text/Reserve Now");
 }
