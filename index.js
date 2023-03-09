@@ -14,6 +14,7 @@ const url =
 const reservation_times = functions.relevantTimes(settings.time);
 
 async function start() {
+  var startTime = performance.now();
   console.log("Starting Puppeteer Script");
 
   // Puppeteer Settings
@@ -26,6 +27,7 @@ async function start() {
       height: 1080,
     },
   });
+
   const page = await browser.newPage();
 
   // Load Resy URL
@@ -39,8 +41,13 @@ async function start() {
   await page.type("input[name=password]", login.password);
   await page.click("text/Continue");
 
+  // Measures login time
+  var endTime = performance.now();
+  console.log(`Login Performance: ${endTime - startTime}ms`);
+
   // Find and click on the desired reservation time
   const desired_res = "text/" + settings.time;
+  var startResTime = performance.now();
 
   // Try for Desired Reservation Time
   try {
@@ -57,13 +64,16 @@ async function start() {
     const confirmation = await frame.waitForSelector(
       "text/Reservation Booked."
     );
+
     if (confirmation) {
       console.log("Reservation Confirmed!");
-      await browser.close();
     } else {
       console.log("Unable to confirm reservation.");
-      await browser.close();
     }
+
+    var endResTime = performance.now();
+    console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
+    await browser.close();
   } catch {
     // Try for Alternate Reservation Times
     console.log(
@@ -87,19 +97,21 @@ async function start() {
         );
         if (confirmation) {
           console.log("Reservation Confirmed!");
-          await browser.close();
         } else {
           console.log("Unable to confirm reservation.");
-          await browser.close();
         }
+        var endResTime = performance.now();
+        console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
+        await browser.close();
         break;
       } catch {
         console.log("No available reservation at " + reservation_times[i]);
       }
     }
   }
-  console.log("No reservations at that time are available - shutting off the script")
-  await browser.close()
+  console.log(
+    "No reservations near the specified time are available - shutting off the script"
+  );
 }
 
 start();
