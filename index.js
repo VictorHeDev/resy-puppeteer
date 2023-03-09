@@ -59,7 +59,8 @@ async function start() {
       try {
         await page.click(next_res);
         console.log("Next available reservation is at " + reservation_times[i]);
-        await page.waitForTimeout(1500);
+        const elementHandle = await page.waitForSelector("div")
+
         for (let i = 0; i < 6; i++) {
           await page.keyboard.press("Tab");
         }
