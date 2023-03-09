@@ -40,52 +40,66 @@ async function start() {
   await page.click("text/Continue");
 
   // Find and click on the desired reservation time
-  const desired_res = "text/" + settings.time + settings.type;
-  await page.waitForTimeout(1000);
-  await page.click(desired_res);
-  console.log("Desired reservation is available");
-  const popup = await page.waitForSelector("iframe[role=dialog]");
-  const frame = await popup.contentFrame();
-  await frame.waitForTimeout(1000);
-  await frame.click("button[data-test-id=order_summary_page-button-book]");
+  const desired_res = "text/" + settings.time;
 
-  // try {
-  //   await page.click(desired_res);
-  //   console.log("Desired reservation is available");
-  //   const popup = await page.waitForSelector("iframe[role=dialog]");
-  //   const frame = await popup.contentFrame();
-  //   await frame.click("text/Reserve Now");
+  // Try for Desired Reservation Time
+  try {
+    await page.waitForTimeout(1000);
+    await page.click(desired_res);
+    console.log("Desired reservation is available");
+    const popup = await page.waitForSelector("iframe[role=dialog]");
+    const frame = await popup.contentFrame();
+    // await frame.waitForTimeout(1250);
+    // await frame.click("button[data-test-id=order_summary_page-button-book]");
+    // console.log("Clicked Reserve Now!");
+    // await frame.click("button[data-test-id=order_summary_page-button-book]");
+    // console.log("Confirmed reservation!");
+    const confirmation = await frame.waitForSelector(
+      "text/Reservation Booked."
+    );
+    if (confirmation) {
+      console.log("Reservation Confirmed!");
+      await browser.close();
+    } else {
+      console.log("Unable to confirm reservation.");
+      await browser.close();
+    }
+  } catch {
+    // Try for Alternate Reservation Times
+    console.log(
+      "Desired Reservation unavailable - attempting to find next available reservation"
+    );
 
-  //   for (let i = 0; i < 6; i++) {
-  //     await page.keyboard.press("Tab");
-  //   }
-  //   // await page.keyboard.press("Enter");
-  // } catch {
-  //   console.log(
-  //     "Desired Reservation unavailable - attempting to find next available reservation"
-  //   );
-
-  //   for (let i = 0; i < reservation_times.length; i++) {
-  //     const next_res = "text/" + reservation_times[i] + settings.type;
-  //     try {
-  //       await page.click(next_res);
-  //       console.log("Next available reservation is at " + reservation_times[i]);
-  //       const popup = await page.waitForSelector("iframe[role=dialog]");
-  //       const frame = await popup.contentFrame();
-  //       await frame.click("text/Reserve Now");
-
-  //       for (let i = 0; i < 6; i++) {
-  //         await page.keyboard.press("Tab");
-  //       }
-  //       // await page.keyboard.press("Enter");
-  //       break;
-  //     } catch {
-  //       console.log("No available reservation at " + reservation_times[i]);
-  //     }
-  //   }
-  // }
-
-  // await page.waitForSelector("text/Reserve Now");
+    for (let i = 0; i < reservation_times.length; i++) {
+      const next_res = "text/" + reservation_times[i] + settings.type;
+      try {
+        await page.click(next_res);
+        console.log("Next available reservation is at " + reservation_times[i]);
+        const popup = await page.waitForSelector("iframe[role=dialog]");
+        const frame = await popup.contentFrame();
+        // await frame.waitForTimeout(1250);
+        // await frame.click("button[data-test-id=order_summary_page-button-book]");
+        // console.log("Clicked Reserve Now!");
+        // await frame.click("button[data-test-id=order_summary_page-button-book]");
+        // console.log("Confirmed reservation!");
+        const confirmation = await frame.waitForSelector(
+          "text/Reservation Booked."
+        );
+        if (confirmation) {
+          console.log("Reservation Confirmed!");
+          await browser.close();
+        } else {
+          console.log("Unable to confirm reservation.");
+          await browser.close();
+        }
+        break;
+      } catch {
+        console.log("No available reservation at " + reservation_times[i]);
+      }
+    }
+  }
+  console.log("No reservations at that time are available - shutting off the script")
+  await browser.close()
 }
 
 start();
