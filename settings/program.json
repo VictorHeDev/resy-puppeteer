@@ -1,5 +1,4 @@
 {
-  "hour": 20,
-  "minute": 9,
-  "second": 0
+  "reservation_release_time": "8:34 PM",
+  "script_startup_time": 55
 }

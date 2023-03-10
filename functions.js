@@ -35,8 +35,23 @@ function relevantTimes(time) {
   return relevantTimes;
 }
 
+function programTimer(str, startup_time) {
+  var time, hours, minutes, seconds;
+  time = str.slice(-2);
+  if (time === "AM") {
+    hours = str.substr(0, str.indexOf(":"));
+  } else {
+    hours = parseInt(str.substr(0, str.indexOf(":"))) + 12;
+  }
+  minutes = parseInt(str.substr(str.indexOf(":") + 1)) - 1;
+  // Usual start time for program
+  seconds = startup_time;
+  return [hours, minutes, seconds];
+}
+
 module.exports = {
   title_prep,
   url_prep,
   relevantTimes,
+  programTimer,
 };

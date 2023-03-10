@@ -113,16 +113,25 @@ async function start() {
         console.log("No available reservation at " + reservation_times[i]);
       }
     }
+
+    // If no reservation is available, close browser
+    console.log("No available reservations");
+    await browser.close();
   }
 }
 
+let startTime = functions.programTimer(
+  program.reservation_release_time,
+  program.script_startup_time
+);
+
 var checkReservation = setInterval(function () {
   var date = new Date();
-  console.log(date);
+  console.log([date.getHours(), date.getMinutes(), date.getSeconds()]);
   if (
-    date.getHours() === program.hour &&
-    date.getMinutes() === program.minute &&
-    date.getSeconds() === program.second
+    date.getHours() === startTime[0] &&
+    date.getMinutes() === startTime[1] &&
+    date.getSeconds() === startTime[2]
   ) {
     start();
     clearInterval(checkReservation);
