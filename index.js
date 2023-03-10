@@ -56,11 +56,11 @@ async function start() {
     console.log("Desired reservation is available");
     const popup = await page.waitForSelector("iframe[role=dialog]");
     const frame = await popup.contentFrame();
-    // await frame.waitForTimeout(1250);
-    // await frame.click("button[data-test-id=order_summary_page-button-book]");
-    // console.log("Clicked Reserve Now!");
-    // await frame.click("button[data-test-id=order_summary_page-button-book]");
-    // console.log("Confirmed reservation!");
+    await frame.waitForTimeout(1250);
+    await frame.click("button[data-test-id=order_summary_page-button-book]");
+    console.log("Clicked Reserve Now!");
+    await frame.click("button[data-test-id=order_summary_page-button-book]");
+    console.log("Confirmed reservation!");
     const confirmation = await frame.waitForSelector(
       "text/Reservation Booked."
     );
@@ -87,11 +87,15 @@ async function start() {
         console.log("Next available reservation is at " + reservation_times[i]);
         const popup = await page.waitForSelector("iframe[role=dialog]");
         const frame = await popup.contentFrame();
-        // await frame.waitForTimeout(1250);
-        // await frame.click("button[data-test-id=order_summary_page-button-book]");
-        // console.log("Clicked Reserve Now!");
-        // await frame.click("button[data-test-id=order_summary_page-button-book]");
-        // console.log("Confirmed reservation!");
+        await frame.waitForTimeout(1250);
+        await frame.click(
+          "button[data-test-id=order_summary_page-button-book]"
+        );
+        console.log("Clicked Reserve Now!");
+        await frame.click(
+          "button[data-test-id=order_summary_page-button-book]"
+        );
+        console.log("Confirmed reservation!");
         const confirmation = await frame.waitForSelector(
           "text/Reservation Booked."
         );
@@ -109,9 +113,6 @@ async function start() {
       }
     }
   }
-  console.log(
-    "No reservations near the specified time are available - shutting off the script"
-  );
 }
 
 start();
