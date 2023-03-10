@@ -74,7 +74,7 @@ async function start() {
 
     var endResTime = performance.now();
     console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
-    await browser.close();
+    // await browser.close();
   } catch {
     // Try for Alternate Reservation Times
     console.log(
@@ -107,7 +107,7 @@ async function start() {
         }
         var endResTime = performance.now();
         console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
-        await browser.close();
+        // await browser.close();
         break;
       } catch {
         console.log("No available reservation at " + reservation_times[i]);
@@ -116,7 +116,7 @@ async function start() {
 
     // If no reservation is available, close browser
     console.log("No available reservations - closing the program.");
-    await browser.close();
+    // await browser.close();
   }
 }
 
@@ -128,7 +128,11 @@ console.log("Program will start at", startTime);
 
 var checkReservation = setInterval(function () {
   var date = new Date();
-  console.log([date.getHours(), date.getMinutes(), date.getSeconds()]);
+  // console.log([date.getHours(), date.getMinutes(), date.getSeconds()]);
+  if (date.getMinutes() === 0) {
+    console.log("Still checking at", [date.getHours()]);
+  }
+
   if (
     date.getHours() === startTime[0] &&
     date.getMinutes() === startTime[1] &&

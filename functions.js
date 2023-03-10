@@ -43,13 +43,13 @@ function programTimer(str, startup_time) {
     if (str.substr(0, str.indexOf(":")) === "12") {
       hours = 23;
     } else {
-      hours = parseInt(str.substr(0, str.indexOf(":")));
+      hours = parseInt(str.substr(0, str.indexOf(":"))) - 1;
     }
   } else {
     if (str.substr(0, str.indexOf(":")) === "12") {
       hours = 11;
     } else {
-      hours = parseInt(str.substr(0, str.indexOf(":"))) + 12;
+      hours = parseInt(str.substr(0, str.indexOf(":"))) + 11;
     }
   }
 
