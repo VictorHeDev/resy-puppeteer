@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/leochung97/resy-puppeteer#readme",
   "dependencies": {
+    "express": "^4.18.2",
+    "node-cron": "^3.0.2",
     "puppeteer": "^19.7.3"
   }
 }
