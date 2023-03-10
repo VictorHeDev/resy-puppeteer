@@ -128,10 +128,7 @@ console.log("Program will start at", startTime);
 
 var checkReservation = setInterval(function () {
   var date = new Date();
-  // console.log([date.getHours(), date.getMinutes(), date.getSeconds()]);
-  if (date.getMinutes() === 0 && date.getSeconds() === 0) {
-    console.log("Still checking at", [date.getHours()]);
-  }
+  console.log([date.getHours(), date.getMinutes(), date.getSeconds()]);
 
   if (
     date.getHours() === startTime[0] &&
