@@ -12,14 +12,14 @@ function url_prep(string) {
   return string.toLowerCase().replace(/ /g, "-");
 }
 
-function relevantTimes(time) {
+function relevantTimes(time, range) {
   const timeObj = new Date(`1970-01-01 ${time}`);
   const roundedTime = new Date(
     Math.floor(timeObj / (15 * 60 * 1000)) * (15 * 60 * 1000)
   );
 
   const relevantTimes = [];
-  for (let i = -2; i <= 2; i++) {
+  for (let i = -range; i <= range; i++) {
     if (i == 0) {
       continue;
     }
@@ -49,7 +49,7 @@ function programTimer(str, startup_time) {
     if (str.substr(0, str.indexOf(":")) === "12") {
       hours = 11;
     } else {
-      hours = parseInt(str.substr(0, str.indexOf(":"))) + 11;
+      hours = parseInt(str.substr(0, str.indexOf(":"))) + 12;
     }
   }
 

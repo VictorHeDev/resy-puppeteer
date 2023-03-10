@@ -15,7 +15,11 @@ const url =
   settings.date +
   settings.seats;
 
-const reservation_times = functions.relevantTimes(settings.time);
+const reservation_times = functions.relevantTimes(
+  settings.time,
+  settings.range
+);
+``;
 
 async function start() {
   var startTime = performance.now();
@@ -125,7 +129,6 @@ async function start() {
 
 // Automated Scheduler
 let releaseTime = functions.programTimer(program.release, 60 - program.buffer);
-console.log(releaseTime);
 
 let cronSchedule = [
   releaseTime[0],
@@ -136,10 +139,10 @@ let cronSchedule = [
   program.weekday,
 ];
 cronSchedule = cronSchedule.join(" ");
-console.log(cronSchedule);
 console.log("Running scheduled task at: " + program.release);
 
 cron.schedule(cronSchedule, function () {
+  console.log("Starting the program...");
   start();
 });
 
