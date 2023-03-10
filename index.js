@@ -1,9 +1,18 @@
+const cron = require("node-cron");
+const express = require("express");
+app = express();
 const puppeteer = require("puppeteer");
 const functions = require("./functions");
 const fs = require("fs");
 const settings = JSON.parse(fs.readFileSync("./settings/settings.json"));
 const login = JSON.parse(fs.readFileSync("./settings/login.json"));
 const program = JSON.parse(fs.readFileSync("./settings/program.json"));
+
+cron.schedule("*/10 * * * * *", function () {
+  console.log("running a task every 10 seconds");
+});
+
+app.listen(3000);
 
 const url =
   settings.site +
