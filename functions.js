@@ -38,13 +38,27 @@ function relevantTimes(time) {
 function programTimer(str, startup_time) {
   var time, hours, minutes, seconds;
   time = str.slice(-2);
+
   if (time === "AM") {
-    hours = str.substr(0, str.indexOf(":"));
+    if (str.substr(0, str.indexOf(":")) === "12") {
+      hours = 23;
+    } else {
+      hours = parseInt(str.substr(0, str.indexOf(":")));
+    }
   } else {
-    hours = parseInt(str.substr(0, str.indexOf(":"))) + 12;
+    if (str.substr(0, str.indexOf(":")) === "12") {
+      hours = 11;
+    } else {
+      hours = parseInt(str.substr(0, str.indexOf(":"))) + 12;
+    }
   }
-  minutes = parseInt(str.substr(str.indexOf(":") + 1)) - 1;
-  // Usual start time for program
+
+  if (parseInt(str.substr(str.indexOf(":") + 1)) === 0) {
+    minutes = 59;
+  } else {
+    minutes = parseInt(str.substr(str.indexOf(":") + 1)) - 1;
+  }
+
   seconds = startup_time;
   return [hours, minutes, seconds];
 }

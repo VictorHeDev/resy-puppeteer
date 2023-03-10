@@ -21,12 +21,12 @@ async function start() {
   // Puppeteer Settings
   const browser = await puppeteer.launch({
     headless: false,
-    ignoreHTTPSErrors: true,
-    args: ["--start-maximized"],
-    defaultViewport: {
-      width: 1920,
-      height: 1080,
-    },
+    // ignoreHTTPSErrors: true,
+    // args: ["--start-maximized"],
+    // defaultViewport: {
+    //   width: 1920,
+    //   height: 1080,
+    // },
   });
 
   const page = await browser.newPage();
@@ -115,7 +115,7 @@ async function start() {
     }
 
     // If no reservation is available, close browser
-    console.log("No available reservations");
+    console.log("No available reservations - closing the program.");
     await browser.close();
   }
 }
@@ -124,6 +124,7 @@ let startTime = functions.programTimer(
   program.reservation_release_time,
   program.script_startup_time
 );
+console.log("Program will start at", startTime);
 
 var checkReservation = setInterval(function () {
   var date = new Date();
