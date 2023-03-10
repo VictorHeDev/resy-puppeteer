@@ -1,6 +1,5 @@
 {
-  "program_settings": {
-    "startup_hour": 9,
-    "startup_minute": 0
-  }
+  "hour": 20,
+  "minute": 9,
+  "second": 0
 }

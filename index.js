@@ -3,6 +3,7 @@ const functions = require("./functions");
 const fs = require("fs");
 const settings = JSON.parse(fs.readFileSync("./settings/settings.json"));
 const login = JSON.parse(fs.readFileSync("./settings/login.json"));
+const program = JSON.parse(fs.readFileSync("./settings/program.json"));
 
 const url =
   settings.site +
@@ -115,4 +116,15 @@ async function start() {
   }
 }
 
-start();
+var checkReservation = setInterval(function () {
+  var date = new Date();
+  console.log(date);
+  if (
+    date.getHours() === program.hour &&
+    date.getMinutes() === program.minute &&
+    date.getSeconds() === program.second
+  ) {
+    start();
+    clearInterval(checkReservation);
+  }
+}, 1000);
