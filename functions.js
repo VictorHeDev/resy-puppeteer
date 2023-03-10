@@ -60,7 +60,7 @@ function programTimer(str, startup_time) {
   }
 
   seconds = startup_time;
-  return [hours, minutes, seconds];
+  return [seconds, minutes, hours];
 }
 
 module.exports = {

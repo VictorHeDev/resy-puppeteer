@@ -8,12 +8,6 @@ const settings = JSON.parse(fs.readFileSync("./settings/settings.json"));
 const login = JSON.parse(fs.readFileSync("./settings/login.json"));
 const program = JSON.parse(fs.readFileSync("./settings/program.json"));
 
-cron.schedule("*/10 * * * * *", function () {
-  console.log("running a task every 10 seconds");
-});
-
-app.listen(3000);
-
 const url =
   settings.site +
   settings.city +
@@ -30,12 +24,12 @@ async function start() {
   // Puppeteer Settings
   const browser = await puppeteer.launch({
     headless: false,
-    // ignoreHTTPSErrors: true,
-    // args: ["--start-maximized"],
-    // defaultViewport: {
-    //   width: 1920,
-    //   height: 1080,
-    // },
+    ignoreHTTPSErrors: true,
+    args: ["--start-maximized"],
+    defaultViewport: {
+      width: 1920,
+      height: 1080,
+    },
   });
 
   const page = await browser.newPage();
@@ -125,26 +119,28 @@ async function start() {
 
     // If no reservation is available, close browser
     console.log("No available reservations - closing the program.");
-    // await browser.close();
+    await browser.close();
   }
 }
 
-let startTime = functions.programTimer(
-  program.reservation_release_time,
-  program.script_startup_time
-);
-console.log("Program will start at", startTime);
+// Automated Scheduler
+let releaseTime = functions.programTimer(program.release, 60 - program.buffer);
+console.log(releaseTime);
 
-var checkReservation = setInterval(function () {
-  var date = new Date();
-  console.log([date.getHours(), date.getMinutes(), date.getSeconds()]);
+let cronSchedule = [
+  releaseTime[0],
+  releaseTime[1],
+  releaseTime[2],
+  program.day,
+  program.month,
+  program.weekday,
+];
+cronSchedule = cronSchedule.join(" ");
+console.log(cronSchedule);
+console.log("Running scheduled task at: " + program.release);
 
-  if (
-    date.getHours() === startTime[0] &&
-    date.getMinutes() === startTime[1] &&
-    date.getSeconds() === startTime[2]
-  ) {
-    start();
-    clearInterval(checkReservation);
-  }
-}, 1000);
+cron.schedule(cronSchedule, function () {
+  start();
+});
+
+app.listen(3000);
