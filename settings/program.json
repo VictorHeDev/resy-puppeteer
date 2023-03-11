@@ -1,6 +1,6 @@
 {
-  "release": "12:00 AM",
-  "buffer": 10,
+  "release": "2:00 PM",
+  "buffer": 9.5,
   "day": "*",
   "month": "*",
   "weekday": "*"

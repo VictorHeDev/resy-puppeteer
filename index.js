@@ -123,22 +123,25 @@ async function start() {
 
     // If no reservation is available, close browser
     console.log("No available reservations - closing the program.");
-    await browser.close();
+    // await browser.close();
   }
 }
 
 // Automated Scheduler
-let releaseTime = functions.programTimer(program.release, 60 - program.buffer);
+let releaseTime = functions.programTimer(program.release, program.buffer);
+releaseTime = releaseTime.split(":");
 
 let cronSchedule = [
-  releaseTime[0],
-  releaseTime[1],
   releaseTime[2],
+  releaseTime[1],
+  releaseTime[0],
   program.day,
   program.month,
   program.weekday,
 ];
+
 cronSchedule = cronSchedule.join(" ");
+
 console.log("Running scheduled task at: " + program.release);
 
 cron.schedule(cronSchedule, function () {

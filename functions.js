@@ -35,32 +35,23 @@ function relevantTimes(time, range) {
   return relevantTimes;
 }
 
-function programTimer(str, startup_time) {
-  var time, hours, minutes, seconds;
-  time = str.slice(-2);
+function programTimer(inputTime, buffer) {
+  // Convert input time to a timestamp
+  const timestamp = Date.parse(`01/01/1970 ${inputTime}`);
 
-  if (time === "AM") {
-    if (str.substr(0, str.indexOf(":")) === "12") {
-      hours = 23;
-    } else {
-      hours = parseInt(str.substr(0, str.indexOf(":"))) - 1;
-    }
-  } else {
-    if (str.substr(0, str.indexOf(":")) === "12") {
-      hours = 11;
-    } else {
-      hours = parseInt(str.substr(0, str.indexOf(":"))) + 12;
-    }
-  }
+  // Subtract 8 seconds from the timestamp
+  const newTimestamp = timestamp - buffer * 1000;
 
-  if (parseInt(str.substr(str.indexOf(":") + 1)) === 0) {
-    minutes = 59;
-  } else {
-    minutes = parseInt(str.substr(str.indexOf(":") + 1)) - 1;
-  }
+  // Convert the new timestamp back to the "hh:mm:ss PM" format
+  const newDate = new Date(newTimestamp);
+  const newTime = newDate.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
 
-  seconds = startup_time;
-  return [seconds, minutes, hours];
+  return newTime;
 }
 
 module.exports = {
