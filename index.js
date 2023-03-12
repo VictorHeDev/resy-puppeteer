@@ -159,3 +159,6 @@ cron.schedule(cronSchedule, function () {
 });
 
 app.listen(3000);
+
+// For reservation testing purposes
+// start();
