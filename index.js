@@ -145,7 +145,9 @@ cronSchedule = cronSchedule.join(" ");
 console.log(
   "Attempting to reserve a " +
     settings.time +
-    " table at " +
+    " table for " +
+    settings.seats.slice(-1) +
+    " people at " +
     settings.restaurant +
     " on " +
     settings.date.slice(6)
