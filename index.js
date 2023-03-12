@@ -142,7 +142,14 @@ let cronSchedule = [
 
 cronSchedule = cronSchedule.join(" ");
 
-console.log("Running scheduled task at: " + program.release);
+console.log(
+  "Attempting to reserve a " +
+    settings.time +
+    " table at " +
+    settings.restaurant +
+    " on " +
+    settings.date.slice(6)
+);
 
 cron.schedule(cronSchedule, function () {
   console.log("Starting the program...");
