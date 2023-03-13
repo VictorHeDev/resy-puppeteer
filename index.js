@@ -29,11 +29,6 @@ async function start() {
   const browser = await puppeteer.launch({
     headless: false,
     ignoreHTTPSErrors: true,
-    args: ["--start-maximized"],
-    defaultViewport: {
-      width: 1920,
-      height: 1080,
-    },
   });
 
   const page = await browser.newPage();
