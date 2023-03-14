@@ -1,11 +1,11 @@
 {
   "site": "https://resy.com/cities/",
   "city": "ny/",
-  "restaurant": "Haenyeo",
-  "date": "?date=2023-03-25",
-  "seats": "&seats=2",
-  "time": "9:00 PM",
+  "restaurant": "Double Chicken Please",
+  "date": "?date=2023-03-21",
+  "seats": "&seats=4",
+  "time": "7:00 PM",
   "type": "",
   "range": 4,
-  "release": "6:34 PM"
+  "release": "12:00 AM"
 }

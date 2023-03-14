@@ -20,22 +20,6 @@ const reservation_times = functions.relevantTimes(
   settings.range
 );
 
-// Login Cron Job Schedule
-let loginTime = functions.programTimer(settings.release, program.buffer);
-loginTime = loginTime.split(":");
-let loginSchedule = [
-  loginTime[2],
-  loginTime[1],
-  loginTime[0],
-  program.day,
-  program.month,
-  program.weekday,
-].join(" ");
-
-cron.schedule(loginSchedule, function () {
-  loginResy();
-});
-
 // Reserve Cron Job Schedule
 let reserveTime = functions.programTimer(settings.release, 1);
 reserveTime = reserveTime.split(":");
@@ -66,15 +50,9 @@ async function start() {
   });
 
   page = await browser.newPage();
-}
-
-// Log into Resy Function
-async function loginResy() {
-  console.log("Starting Puppeteer Script");
 
   // Load Resy URL
   await page.goto(url);
-  console.log("Loaded restaurant reservation page");
 
   // Login to Resy
   await page.click("text/Log in");
@@ -82,7 +60,6 @@ async function loginResy() {
   await page.type("input[name=email]", login.email);
   await page.type("input[name=password]", login.password);
   await page.click("text/Continue");
-  console.log("Current time: ", new Date());
 }
 
 async function reserve() {
@@ -115,8 +92,7 @@ async function reserve() {
 
     var endResTime = performance.now();
     console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
-    await browser.close();
-    return;
+    // await browser.close();
   } catch {
     // Try for Alternate Reservation Times
     console.log(
@@ -127,7 +103,6 @@ async function reserve() {
       const next_res = "text/" + reservation_times[i] + settings.type;
       try {
         await page.click(next_res);
-        console.log("An alternative reservation is available");
         const popup = await page.waitForSelector("iframe[role=dialog]");
         const frame = await popup.contentFrame();
         await frame.waitForTimeout(1250);
@@ -151,8 +126,7 @@ async function reserve() {
 
         var endResTime = performance.now();
         console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
-        await browser.close();
-        return;
+        // await browser.close();
       } catch {
         console.log("No available reservation at " + reservation_times[i]);
       }
@@ -162,8 +136,7 @@ async function reserve() {
     console.log(
       "No available reservations within specified range - closing the program."
     );
-    await browser.close();
-    return;
+    // await browser.close();
   }
 }
 
