@@ -21,7 +21,7 @@ const reservation_times = functions.relevantTimes(
 );
 
 // Reserve Cron Job Schedule
-let reserveTime = functions.programTimer(settings.release, 1);
+let reserveTime = functions.programTimer(settings.release, program.buffer);
 reserveTime = reserveTime.split(":");
 let reserveSchedule = [
   reserveTime[2],
@@ -55,14 +55,21 @@ async function start() {
   await page.goto(url);
 
   // Login to Resy
-  await page.click("text/Log in");
-  await page.click("text/Use Email and Password instead");
-  await page.type("input[name=email]", login.email);
-  await page.type("input[name=password]", login.password);
-  await page.click("text/Continue");
+  try {
+    await page.click("text/Log in");
+    await page.click("text/Use Email and Password instead");
+    await page.type("input[name=email]", login.email);
+    await page.type("input[name=password]", login.password);
+    await page.click("text/Continue");
+    console.log("Login successful!");
+  } catch {
+    console.log("Login failed!");
+    return;
+  }
 }
 
 async function reserve() {
+  console.log("Beginning reservation process at:", new Date());
   // Find and click on the desired reservation time
   const desired_res = "text/" + settings.time;
   var startResTime = performance.now();
@@ -70,6 +77,7 @@ async function reserve() {
   // Try for Desired Reservation Time
   page.reload();
   try {
+    console.log("Checked page at:", new Date());
     await page.waitForTimeout(1000);
     await page.click(desired_res);
     console.log("Desired reservation is available");
