@@ -19,7 +19,6 @@ const reservation_times = functions.relevantTimes(
   settings.time,
   settings.range
 );
-``;
 
 async function start() {
   var startTime = performance.now();
@@ -29,6 +28,11 @@ async function start() {
   const browser = await puppeteer.launch({
     headless: false,
     ignoreHTTPSErrors: true,
+    args: ["--start-maximized"],
+    defaultViewport: {
+      width: 1920,
+      height: 1080,
+    },
   });
 
   const page = await browser.newPage();
@@ -76,7 +80,7 @@ async function start() {
 
     var endResTime = performance.now();
     console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
-    // await browser.close();
+    await browser.close();
   } catch {
     // Try for Alternate Reservation Times
     console.log(
@@ -87,7 +91,7 @@ async function start() {
       const next_res = "text/" + reservation_times[i] + settings.type;
       try {
         await page.click(next_res);
-        console.log("Next available reservation is at " + reservation_times[i]);
+        console.log("An alternative reservation is available");
         const popup = await page.waitForSelector("iframe[role=dialog]");
         const frame = await popup.contentFrame();
         await frame.waitForTimeout(1250);
@@ -102,28 +106,31 @@ async function start() {
         const confirmation = await frame.waitForSelector(
           "text/Reservation Booked."
         );
+
         if (confirmation) {
           console.log("Reservation Confirmed!");
         } else {
           console.log("Unable to confirm reservation.");
         }
+
         var endResTime = performance.now();
         console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
-        // await browser.close();
-        break;
+        await browser.close();
       } catch {
         console.log("No available reservation at " + reservation_times[i]);
       }
     }
 
     // If no reservation is available, close browser
-    console.log("No available reservations - closing the program.");
-    // await browser.close();
+    console.log(
+      "No available reservations within specified range - closing the program."
+    );
+    await browser.close();
   }
 }
 
 // Automated Scheduler
-let releaseTime = functions.programTimer(program.release, program.buffer);
+let releaseTime = functions.programTimer(settings.release, program.buffer);
 releaseTime = releaseTime.split(":");
 
 let cronSchedule = [
@@ -156,4 +163,4 @@ cron.schedule(cronSchedule, function () {
 app.listen(3000);
 
 // For reservation testing purposes
-// start();
+start();

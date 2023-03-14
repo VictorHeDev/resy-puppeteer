@@ -1,10 +1,11 @@
 {
   "site": "https://resy.com/cities/",
   "city": "ny/",
-  "restaurant": "4 Charles Prime Rib",
-  "date": "?date=2023-04-02",
-  "seats": "&seats=4",
-  "time": "7:00 PM",
+  "restaurant": "Haenyeo",
+  "date": "?date=2023-03-25",
+  "seats": "&seats=2",
+  "time": "10:00 PM",
   "type": "",
-  "range": 4
+  "range": 4,
+  "release": "9:00 AM"
 }
