@@ -20,12 +20,42 @@ const reservation_times = functions.relevantTimes(
   settings.range
 );
 
-async function start() {
-  var startTime = performance.now();
-  console.log("Starting Puppeteer Script");
+// Login Cron Job Schedule
+let loginTime = functions.programTimer(settings.release, program.buffer);
+loginTime = loginTime.split(":");
+let loginSchedule = [
+  loginTime[2],
+  loginTime[1],
+  loginTime[0],
+  program.day,
+  program.month,
+  program.weekday,
+].join(" ");
 
-  // Puppeteer Settings
-  const browser = await puppeteer.launch({
+cron.schedule(loginSchedule, function () {
+  loginResy();
+});
+
+// Reserve Cron Job Schedule
+let reserveTime = functions.programTimer(settings.release, 1);
+reserveTime = reserveTime.split(":");
+let reserveSchedule = [
+  reserveTime[2],
+  reserveTime[1],
+  reserveTime[0],
+  program.day,
+  program.month,
+  program.weekday,
+].join(" ");
+
+cron.schedule(reserveSchedule, function () {
+  reserve();
+});
+
+// Start Puppeteer
+let browser, page;
+async function start() {
+  browser = await puppeteer.launch({
     headless: false,
     ignoreHTTPSErrors: true,
     args: ["--start-maximized"],
@@ -35,7 +65,12 @@ async function start() {
     },
   });
 
-  const page = await browser.newPage();
+  page = await browser.newPage();
+}
+
+// Log into Resy Function
+async function loginResy() {
+  console.log("Starting Puppeteer Script");
 
   // Load Resy URL
   await page.goto(url);
@@ -47,16 +82,16 @@ async function start() {
   await page.type("input[name=email]", login.email);
   await page.type("input[name=password]", login.password);
   await page.click("text/Continue");
+  console.log("Current time: ", new Date());
+}
 
-  // Measures login time
-  var endTime = performance.now();
-  console.log(`Login Performance: ${endTime - startTime}ms`);
-
+async function reserve() {
   // Find and click on the desired reservation time
   const desired_res = "text/" + settings.time;
   var startResTime = performance.now();
 
   // Try for Desired Reservation Time
+  page.reload();
   try {
     await page.waitForTimeout(1000);
     await page.click(desired_res);
@@ -81,6 +116,7 @@ async function start() {
     var endResTime = performance.now();
     console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
     await browser.close();
+    return;
   } catch {
     // Try for Alternate Reservation Times
     console.log(
@@ -116,6 +152,7 @@ async function start() {
         var endResTime = performance.now();
         console.log(`Reservation Performance: ${endResTime - startResTime}ms`);
         await browser.close();
+        return;
       } catch {
         console.log("No available reservation at " + reservation_times[i]);
       }
@@ -126,23 +163,9 @@ async function start() {
       "No available reservations within specified range - closing the program."
     );
     await browser.close();
+    return;
   }
 }
-
-// Automated Scheduler
-let releaseTime = functions.programTimer(settings.release, program.buffer);
-releaseTime = releaseTime.split(":");
-
-let cronSchedule = [
-  releaseTime[2],
-  releaseTime[1],
-  releaseTime[0],
-  program.day,
-  program.month,
-  program.weekday,
-];
-
-cronSchedule = cronSchedule.join(" ");
 
 console.log(
   "Attempting to reserve a " +
@@ -155,12 +178,6 @@ console.log(
     settings.date.slice(6)
 );
 
-cron.schedule(cronSchedule, function () {
-  console.log("Starting the program...");
-  start();
-});
+start();
 
 app.listen(3000);
-
-// For reservation testing purposes
-start();
