@@ -21,16 +21,25 @@ const reservation_times = functions.relevantTimes(
 );
 
 // Reserve Cron Job Schedule
-let reserveTime = functions.programTimer(settings.release, program.buffer);
-reserveTime = reserveTime.split(":");
-let reserveSchedule = [
-  reserveTime[2],
-  reserveTime[1],
-  reserveTime[0],
-  program.day,
-  program.month,
-  program.weekday,
-].join(" ");
+
+let reserveSchedule;
+if (settings.release == "12:00 AM") {
+  reserveSchedule = "0 0 0 * * *";
+} else {
+  reserveTime = functions
+    .programTimer(settings.release, program.buffer)
+    .split(":");
+  reserveSchedule = [
+    reserveTime[2],
+    reserveTime[1],
+    reserveTime[0],
+    program.day,
+    program.month,
+    program.weekday,
+  ].join(" ");
+}
+
+console.log(reserveSchedule);
 
 cron.schedule(reserveSchedule, function () {
   reserve();
@@ -76,6 +85,7 @@ async function reserve() {
 
   // Try for Desired Reservation Time
   page.reload();
+  page.screenshot();
   try {
     console.log("Checked page at:", new Date());
     await page.waitForTimeout(1000);
